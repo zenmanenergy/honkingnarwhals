@@ -441,19 +441,21 @@ footer p {
 /* Responsive Design */
 @media (max-width: 768px) {
     .navbar {
-        padding: 0.5rem 0;
+        padding: 0.3rem 0;
     }
 
     .nav-container {
         position: relative;
+        padding: 0 15px;
     }
 
     .nav-logo h1 {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
+        margin-bottom: 0.1rem;
     }
 
     .team-number {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
     }
 
     .menu-toggle {
@@ -463,23 +465,24 @@ footer p {
     .nav-menu {
         position: absolute;
         top: 100%;
-        left: 0;
-        width: 100%;
+        left: 15px;
+        right: 15px;
         background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
         flex-direction: column;
         gap: 0;
-        margin-top: 1rem;
-        border-radius: 8px;
+        margin-top: 0.5rem;
+        border-radius: 6px;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         overflow: hidden;
         max-height: 0;
         opacity: 0;
         visibility: hidden;
         transition: all 0.3s ease;
+        z-index: 1000;
     }
 
     .nav-menu.active {
-        max-height: 300px;
+        max-height: 200px;
         opacity: 1;
         visibility: visible;
     }
@@ -490,10 +493,11 @@ footer p {
 
     .nav-menu a {
         display: block;
-        padding: 1rem;
+        padding: 0.75rem 1rem;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         text-align: center;
         transition: all 0.3s ease;
+        font-size: 0.9rem;
     }
 
     .nav-menu li:last-child a {
@@ -548,8 +552,41 @@ footer p {
 }
 
 @media (max-width: 480px) {
+    .navbar {
+        padding: 0.25rem 0;
+    }
+
+    .nav-container {
+        padding: 0 10px;
+    }
+
     .nav-logo h1 {
+        font-size: 1.2rem;
+        margin-bottom: 0.05rem;
+    }
+
+    .team-number {
+        font-size: 0.7rem;
+    }
+
+    .menu-toggle {
         font-size: 1.3rem;
+        padding: 0.3rem;
+    }
+
+    .nav-menu {
+        left: 10px;
+        right: 10px;
+        margin-top: 0.3rem;
+    }
+
+    .nav-menu.active {
+        max-height: 180px;
+    }
+
+    .nav-menu a {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
     }
 
     .hero {
