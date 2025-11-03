@@ -422,18 +422,93 @@ footer p {
     font-weight: bold;
 }
 
+/* Mobile Menu Toggle */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.menu-toggle:focus {
+    outline: 2px solid #00d4ff;
+    outline-offset: 2px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
+    .navbar {
+        padding: 0.5rem 0;
+    }
+
     .nav-container {
-        flex-direction: column;
-        gap: 1rem;
+        position: relative;
+    }
+
+    .nav-logo h1 {
+        font-size: 1.5rem;
+    }
+
+    .team-number {
+        font-size: 0.8rem;
+    }
+
+    .menu-toggle {
+        display: block;
     }
 
     .nav-menu {
-        flex-direction: column;
-        gap: 0.5rem;
+        position: absolute;
+        top: 100%;
+        left: 0;
         width: 100%;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        flex-direction: column;
+        gap: 0;
+        margin-top: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        max-height: 0;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .nav-menu.active {
+        max-height: 300px;
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .nav-menu li {
+        width: 100%;
+    }
+
+    .nav-menu a {
+        display: block;
+        padding: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .nav-menu li:last-child a {
+        border-bottom: none;
+    }
+
+    .nav-menu a:hover,
+    .nav-menu a.active {
+        background-color: #00d4ff;
+        color: #1a1a2e;
+    }
+
+    .hero {
+        height: 400px;
+        margin-top: 0;
     }
 
     .hero-content h2 {
@@ -444,8 +519,16 @@ footer p {
         font-size: 1.2rem;
     }
 
+    section {
+        padding: 2rem 0;
+    }
+
     section h2 {
         font-size: 2rem;
+    }
+
+    .page-header {
+        padding: 2rem 0;
     }
 
     .page-header h1 {
@@ -457,5 +540,37 @@ footer p {
     .skills-grid,
     .sponsorship-tiers {
         grid-template-columns: 1fr;
+    }
+
+    .container {
+        padding: 0 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-logo h1 {
+        font-size: 1.3rem;
+    }
+
+    .hero {
+        height: 350px;
+    }
+
+    .hero-content h2 {
+        font-size: 1.7rem;
+    }
+
+    .hero-content p {
+        font-size: 1.1rem;
+    }
+
+    section h2 {
+        font-size: 1.8rem;
+    }
+
+    .benefit-card,
+    .tier-card,
+    .role-card {
+        padding: 1.5rem;
     }
 }

@@ -12,7 +12,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Mobile menu toggle functionality (for future enhancement)
+// Mobile menu toggle functionality
 document.addEventListener('DOMContentLoaded', function() {
     // Add active class to current page in navigation
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
@@ -24,6 +24,45 @@ document.addEventListener('DOMContentLoaded', function() {
             link.classList.add('active');
         }
     });
+
+    // Mobile menu toggle
+    const mobileMenuButton = document.getElementById('mobile-menu');
+    const navMenu = document.getElementById('nav-menu');
+    
+    if (mobileMenuButton && navMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            navMenu.classList.toggle('active');
+            
+            // Update button icon
+            const icon = this.querySelector('span');
+            if (navMenu.classList.contains('active')) {
+                icon.textContent = '✕';
+            } else {
+                icon.textContent = '☰';
+            }
+        });
+
+        // Close menu when clicking on nav links
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                navMenu.classList.remove('active');
+                const icon = mobileMenuButton.querySelector('span');
+                icon.textContent = '☰';
+            });
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const isClickInsideNav = navMenu.contains(event.target);
+            const isClickOnButton = mobileMenuButton.contains(event.target);
+            
+            if (!isClickInsideNav && !isClickOnButton && navMenu.classList.contains('active')) {
+                navMenu.classList.remove('active');
+                const icon = mobileMenuButton.querySelector('span');
+                icon.textContent = '☰';
+            }
+        });
+    }
 });
 
 // Add scroll effect to navbar
