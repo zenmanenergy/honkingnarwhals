@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Information Form - Honking Narwhals Team 9214</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h1>Honking Narwhals</h1>
+                <p class="team-number">FIRST Robotics Team 9214</p>
+            </div>
+            <button class="menu-toggle" id="mobile-menu">
+                <span>☰</span>
+            </button>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="join.html">Join the Team</a></li>
+                <li><a href="sponsor.html">Sponsor the Team</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1>Student Information Form</h1>
+                <p>Step 1 of 2: Tell us about yourself</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="container">
+                <div class="form-container">
+                    <h2>Student & Family Information</h2>
+                    <p>Please fill out all fields below. This information helps us stay in touch with you and your family throughout the robotics season.</p>
+
+                    <form class="student-form" id="studentForm">
+                        <!-- Student Information -->
+                        <div class="form-section">
+                            <h3>Student Information</h3>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="studentFirstName">Student First Name *</label>
+                                    <input type="text" id="studentFirstName" name="studentFirstName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="studentLastName">Student Last Name *</label>
+                                    <input type="text" id="studentLastName" name="studentLastName" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="studentEmail">Student Email *</label>
+                                    <input type="email" id="studentEmail" name="studentEmail" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="studentPhone">Student Phone</label>
+                                    <input type="tel" id="studentPhone" name="studentPhone">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="studentAge">Student Age *</label>
+                                    <input type="number" id="studentAge" name="studentAge" min="13" max="19" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="studentSchool">Student School *</label>
+                                    <input type="text" id="studentSchool" name="studentSchool" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Parent/Guardian 1 Information -->
+                        <div class="form-section">
+                            <h3>Parent/Guardian 1 Information</h3>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="parent1FirstName">First Name *</label>
+                                    <input type="text" id="parent1FirstName" name="parent1FirstName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="parent1LastName">Last Name *</label>
+                                    <input type="text" id="parent1LastName" name="parent1LastName" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="parent1Email">Email *</label>
+                                    <input type="email" id="parent1Email" name="parent1Email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="parent1Phone">Phone *</label>
+                                    <input type="tel" id="parent1Phone" name="parent1Phone" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Parent/Guardian 2 Information (Optional) -->
+                        <div class="form-section">
+                            <h3>Parent/Guardian 2 Information (Optional)</h3>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="parent2FirstName">First Name</label>
+                                    <input type="text" id="parent2FirstName" name="parent2FirstName">
+                                </div>
+                                <div class="form-group">
+                                    <label for="parent2LastName">Last Name</label>
+                                    <input type="text" id="parent2LastName" name="parent2LastName">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="parent2Email">Email</label>
+                                    <input type="email" id="parent2Email" name="parent2Email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="parent2Phone">Phone</label>
+                                    <input type="tel" id="parent2Phone" name="parent2Phone">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="cta-button">Submit Information</button>
+                            </div>
+                    </form>
+
+                    <div class="next-steps" style="display: none;" id="nextSteps">
+                        <h3>✅ Information Received!</h3>
+                        <p>Thank you for submitting your information. Now proceed to Step 2:</p>
+                        <a href="https://www.zeffy.com/en-US/ticketing/team-9214-membership" class="cta-button" target="_blank">Pay Team Membership ($250)</a>
+                        <p><small>After completing payment, we'll be in touch with meeting details and next steps!</small></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Honking Narwhals - FIRST Robotics Team 9214 | Norfolk, VA</p>
+            <p>Meeting at <a href="http://www.757makerspace.com" target="_blank">757 Makerspace</a> - 737 E 23rd St, Norfolk, VA 23504</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="student-form.js"></script>
+</body>
+</html>

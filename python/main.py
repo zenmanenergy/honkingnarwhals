@@ -15,14 +15,25 @@ def index():
 
 @app.route('/submit', methods=['GET'])
 def submit():
-	parent_first = request.args.get('parent_first')
-	parent_last = request.args.get('parent_last')
-	student_first = request.args.get('student_first')
-	student_last = request.args.get('student_last')
-	parent_email = request.args.get('parent_email')
-	parent_phone = request.args.get('parent_phone')
-	student_email = request.args.get('student_email')
-	student_phone = request.args.get('student_phone')
+	# Student information
+	student_first = request.args.get('studentFirstName')
+	student_last = request.args.get('studentLastName')
+	student_email = request.args.get('studentEmail')
+	student_phone = request.args.get('studentPhone')
+	student_age = request.args.get('studentAge')
+	student_school = request.args.get('studentSchool')
+	
+	# Parent/Guardian 1 information
+	parent1_first = request.args.get('parent1FirstName')
+	parent1_last = request.args.get('parent1LastName')
+	parent1_email = request.args.get('parent1Email')
+	parent1_phone = request.args.get('parent1Phone')
+	
+	# Parent/Guardian 2 information (optional)
+	parent2_first = request.args.get('parent2FirstName', '')
+	parent2_last = request.args.get('parent2LastName', '')
+	parent2_email = request.args.get('parent2Email', '')
+	parent2_phone = request.args.get('parent2Phone', '')
 
 	timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
@@ -33,8 +44,9 @@ def submit():
 	service = build('sheets', 'v4', credentials=creds)
 	sheet = service.spreadsheets()
 
-	values = [[timestamp, parent_first, parent_last, student_first, student_last,
-	           parent_email, parent_phone, student_email, student_phone]]
+	values = [[timestamp, student_first, student_last, student_email, student_phone, 
+	           student_age, student_school, parent1_first, parent1_last, parent1_email, 
+	           parent1_phone, parent2_first, parent2_last, parent2_email, parent2_phone]]
 
 	body = {'values': values}
 	sheet.values().append(

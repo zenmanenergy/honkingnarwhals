@@ -105,4 +105,45 @@ document.addEventListener('DOMContentLoaded', () => {
         card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         observer.observe(card);
     });
+    
+    // Check for completed student info on join page
+    if (window.location.pathname.includes('join.html')) {
+        checkStudentInfoCompletion();
+    }
 });
+
+// Cookie helper functions
+function getCookie(name) {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
+// Check if student info has been completed and update the UI
+function checkStudentInfoCompletion() {
+    const isCompleted = getCookie('studentInfoCompleted');
+    if (isCompleted === 'true') {
+        const step1Element = document.querySelector('.step-item:first-child');
+        if (step1Element) {
+            step1Element.classList.add('completed');
+            
+            // Update the button text and styling
+            const button = step1Element.querySelector('.cta-button');
+            if (button) {
+                button.textContent = '✅ Completed';
+                button.classList.add('completed-button');
+            }
+            
+            // Update the heading
+            const heading = step1Element.querySelector('h4');
+            if (heading) {
+                heading.innerHTML = 'Step 1: Student Information ✅';
+            }
+        }
+    }
+}
