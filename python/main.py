@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 SPREADSHEET_ID = '1yazHtr3Ye8ye489mHb-Oasbc_PI-0qp2qAvlqvnxhso'
 RANGE_NAME = 'Sheet1!A1'
-SERVICE_ACCOUNT_FILE = './google_sheet_credentials.json.json'
+SERVICE_ACCOUNT_FILE = './google_sheet_credentials.json'
 
 @app.route('/')
 def index():
