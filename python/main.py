@@ -1,9 +1,11 @@
 from flask import Flask, request
+from flask_cors import CORS
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from datetime import datetime
 
 app = Flask(__name__)
+CORS(app)  # This will enable CORS for all routes
 
 SPREADSHEET_ID = '1yazHtr3Ye8ye489mHb-Oasbc_PI-0qp2qAvlqvnxhso'
 RANGE_NAME = 'Sheet1!A1'
@@ -13,8 +15,17 @@ SERVICE_ACCOUNT_FILE = './google_sheet_credentials.json'
 def index():
 	return 'Google Sheets logging app is live.'
 
-@app.route('/submit', methods=['GET'])
+@app.route('/submit', methods=['GET', 'OPTIONS'])
 def submit():
+	# Handle preflight OPTIONS request
+	if request.method == 'OPTIONS':
+		response = app.make_default_options_response()
+		headers = response.headers
+		headers['Access-Control-Allow-Origin'] = '*'
+		headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+		headers['Access-Control-Allow-Headers'] = 'Content-Type'
+		return response
+	
 	# Student information
 	student_first = request.args.get('studentFirstName')
 	student_last = request.args.get('studentLastName')
