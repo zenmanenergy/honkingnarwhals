@@ -137,6 +137,9 @@ function checkStudentInfoCompletion() {
             if (button) {
                 button.textContent = '✅ Completed';
                 button.classList.add('completed-button');
+                // Ensure the button remains clickable
+                button.style.pointerEvents = 'auto';
+                button.style.cursor = 'pointer';
             }
             
             // Update the heading
