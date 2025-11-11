@@ -5,13 +5,20 @@ from googleapiclient.discovery import build
 from datetime import datetime
 import os
 import logging
+import warnings
 
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
 
+# Suppress the oauth2client deprecation warning
+warnings.filterwarnings("ignore", message="file_cache is only supported with oauth2client<4.0.0")
+
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Also suppress the warning at the googleapiclient level
+logging.getLogger('googleapiclient.discovery_cache').setLevel(logging.ERROR)
 
 SPREADSHEET_ID = '1yazHtr3Ye8ye489mHb-Oasbc_PI-0qp2qAvlqvnxhso'
 RANGE_NAME = 'Sheet1!A1'
