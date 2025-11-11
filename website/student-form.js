@@ -46,20 +46,25 @@ function sendDataToServer(data) {
     fetch(fullUrl)
         .then(response => {
             if (response.ok) {
-                return response.text();
+                return response.json();
             }
-            throw new Error('Network response was not ok');
+            throw new Error(`Server responded with status: ${response.status}`);
         })
         .then(data => {
             console.log('Success:', data);
-            // Store data locally as backup
-            localStorage.setItem('honkingNarwhalsStudentData', JSON.stringify(data));
             
-            // Set cookie to indicate student info is completed
-            setCookie('studentInfoCompleted', 'true', 30); // Expires in 30 days
-            
-            // Redirect back to join page to show completion
-            window.location.href = 'join.html';
+            if (data.status === 'success') {
+                // Store data locally as backup
+                localStorage.setItem('honkingNarwhalsStudentData', JSON.stringify(data));
+                
+                // Set cookie to indicate student info is completed
+                setCookie('studentInfoCompleted', 'true', 30); // Expires in 30 days
+                
+                // Redirect back to join page to show completion
+                window.location.href = 'join.html';
+            } else {
+                throw new Error(data.message || 'Unknown error occurred');
+            }
         })
         .catch(error => {
             console.error('Error:', error);
