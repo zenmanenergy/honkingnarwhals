@@ -28,6 +28,39 @@ SERVICE_ACCOUNT_FILE = './google_sheet_credentials.json'
 def index():
 	return 'Google Sheets logging app is live.'
 
+@app.route('/test-permissions')
+def test_permissions():
+	try:
+		# Get the directory where main.py is located
+		app_dir = os.path.dirname(__file__)
+		test_file_path = os.path.join(app_dir, 'test_write_permissions.txt')
+		
+		# Try to write a test file
+		with open(test_file_path, 'w') as f:
+			f.write('Test write permissions\n')
+			f.flush()
+		
+		# Try to read it back
+		with open(test_file_path, 'r') as f:
+			content = f.read()
+		
+		# Clean up the test file
+		os.remove(test_file_path)
+		
+		return jsonify({
+			'status': 'success',
+			'message': 'Write permissions OK',
+			'directory': app_dir,
+			'test_content': content.strip()
+		})
+		
+	except Exception as e:
+		return jsonify({
+			'status': 'error',
+			'message': f'Write permission denied: {str(e)}',
+			'directory': os.path.dirname(__file__) if '__file__' in globals() else 'unknown'
+		})
+
 @app.route('/submit', methods=['GET', 'OPTIONS'])
 def submit():
 	# Handle preflight OPTIONS request
@@ -69,28 +102,15 @@ def submit():
 		logger.error(f"Service account file not found: {SERVICE_ACCOUNT_FILE}")
 		# Save to backup file since Google Sheets isn't available
 		try:
-			backup_data = {
-				'timestamp': timestamp,
-				'student_first': student_first,
-				'student_last': student_last,
-				'student_email': student_email,
-				'student_phone': student_phone,
-				'student_age': student_age,
-				'student_school': student_school,
-				'parent1_first': parent1_first,
-				'parent1_last': parent1_last,
-				'parent1_email': parent1_email,
-				'parent1_phone': parent1_phone,
-				'parent2_first': parent2_first,
-				'parent2_last': parent2_last,
-				'parent2_email': parent2_email,
-				'parent2_phone': parent2_phone
-			}
+			backup_line = f"{timestamp}|{student_first}|{student_last}|{student_email}|{student_phone}|{student_age}|{student_school}|{parent1_first}|{parent1_last}|{parent1_email}|{parent1_phone}|{parent2_first}|{parent2_last}|{parent2_email}|{parent2_phone}\n"
 			
-			with open('student_submissions_backup.txt', 'a') as f:
-				f.write(f"{backup_data}\n")
+			backup_file_path = os.path.join(os.path.dirname(__file__), 'student_submissions_backup.txt')
 			
-			logger.info(f"Saved backup data for {student_first} {student_last} (no credentials)")
+			with open(backup_file_path, 'a', encoding='utf-8') as f:
+				f.write(backup_line)
+				f.flush()  # Force write to disk
+			
+			logger.info(f"Saved backup data for {student_first} {student_last} (no credentials) to {backup_file_path}")
 			return jsonify({
 				'status': 'success',
 				'message': 'Data saved to backup. We will process it manually.',
@@ -137,29 +157,16 @@ def submit():
 		
 		# Try to save to a local backup file if Google Sheets fails
 		try:
-			backup_data = {
-				'timestamp': timestamp,
-				'student_first': student_first,
-				'student_last': student_last,
-				'student_email': student_email,
-				'student_phone': student_phone,
-				'student_age': student_age,
-				'student_school': student_school,
-				'parent1_first': parent1_first,
-				'parent1_last': parent1_last,
-				'parent1_email': parent1_email,
-				'parent1_phone': parent1_phone,
-				'parent2_first': parent2_first,
-				'parent2_last': parent2_last,
-				'parent2_email': parent2_email,
-				'parent2_phone': parent2_phone
-			}
+			backup_line = f"{timestamp}|{student_first}|{student_last}|{student_email}|{student_phone}|{student_age}|{student_school}|{parent1_first}|{parent1_last}|{parent1_email}|{parent1_phone}|{parent2_first}|{parent2_last}|{parent2_email}|{parent2_phone}\n"
 			
-			# Save to backup file
-			with open('student_submissions_backup.txt', 'a') as f:
-				f.write(f"{backup_data}\n")
+			# Try to save to backup file in current directory
+			backup_file_path = os.path.join(os.path.dirname(__file__), 'student_submissions_backup.txt')
 			
-			logger.info(f"Saved backup data for {student_first} {student_last}")
+			with open(backup_file_path, 'a', encoding='utf-8') as f:
+				f.write(backup_line)
+				f.flush()  # Force write to disk
+			
+			logger.info(f"Saved backup data for {student_first} {student_last} to {backup_file_path}")
 			return jsonify({
 				'status': 'success',
 				'message': 'Data saved to backup. We will process it manually.',
