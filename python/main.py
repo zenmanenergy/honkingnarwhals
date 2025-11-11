@@ -32,40 +32,71 @@ def submit():
 		headers['Access-Control-Allow-Headers'] = 'Content-Type'
 		return response
 	
-	try:
-		# Student information
-		student_first = request.args.get('studentFirstName', '')
-		student_last = request.args.get('studentLastName', '')
-		student_email = request.args.get('studentEmail', '')
-		student_phone = request.args.get('studentPhone', '')
-		student_age = request.args.get('studentAge', '')
-		student_school = request.args.get('studentSchool', '')
-		
-		# Parent/Guardian 1 information
-		parent1_first = request.args.get('parent1FirstName', '')
-		parent1_last = request.args.get('parent1LastName', '')
-		parent1_email = request.args.get('parent1Email', '')
-		parent1_phone = request.args.get('parent1Phone', '')
-		
-		# Parent/Guardian 2 information (optional)
-		parent2_first = request.args.get('parent2FirstName', '')
-		parent2_last = request.args.get('parent2LastName', '')
-		parent2_email = request.args.get('parent2Email', '')
-		parent2_phone = request.args.get('parent2Phone', '')
+	# Student information
+	student_first = request.args.get('studentFirstName', '')
+	student_last = request.args.get('studentLastName', '')
+	student_email = request.args.get('studentEmail', '')
+	student_phone = request.args.get('studentPhone', '')
+	student_age = request.args.get('studentAge', '')
+	student_school = request.args.get('studentSchool', '')
+	
+	# Parent/Guardian 1 information
+	parent1_first = request.args.get('parent1FirstName', '')
+	parent1_last = request.args.get('parent1LastName', '')
+	parent1_email = request.args.get('parent1Email', '')
+	parent1_phone = request.args.get('parent1Phone', '')
+	
+	# Parent/Guardian 2 information (optional)
+	parent2_first = request.args.get('parent2FirstName', '')
+	parent2_last = request.args.get('parent2LastName', '')
+	parent2_email = request.args.get('parent2Email', '')
+	parent2_phone = request.args.get('parent2Phone', '')
 
-		timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-		
-		# Log the submission attempt
-		logger.info(f"Student submission: {student_first} {student_last} at {timestamp}")
+	timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+	
+	# Log the submission attempt
+	logger.info(f"Student submission: {student_first} {student_last} at {timestamp}")
 
-		# Check if credentials file exists
-		if not os.path.exists(SERVICE_ACCOUNT_FILE):
-			logger.error(f"Service account file not found: {SERVICE_ACCOUNT_FILE}")
+	# Check if credentials file exists
+	if not os.path.exists(SERVICE_ACCOUNT_FILE):
+		logger.error(f"Service account file not found: {SERVICE_ACCOUNT_FILE}")
+		# Save to backup file since Google Sheets isn't available
+		try:
+			backup_data = {
+				'timestamp': timestamp,
+				'student_first': student_first,
+				'student_last': student_last,
+				'student_email': student_email,
+				'student_phone': student_phone,
+				'student_age': student_age,
+				'student_school': student_school,
+				'parent1_first': parent1_first,
+				'parent1_last': parent1_last,
+				'parent1_email': parent1_email,
+				'parent1_phone': parent1_phone,
+				'parent2_first': parent2_first,
+				'parent2_last': parent2_last,
+				'parent2_email': parent2_email,
+				'parent2_phone': parent2_phone
+			}
+			
+			with open('student_submissions_backup.txt', 'a') as f:
+				f.write(f"{backup_data}\n")
+			
+			logger.info(f"Saved backup data for {student_first} {student_last} (no credentials)")
+			return jsonify({
+				'status': 'success',
+				'message': 'Data saved to backup. We will process it manually.',
+				'timestamp': timestamp
+			})
+		except Exception as backup_error:
+			logger.error(f"Backup save failed: {str(backup_error)}")
 			return jsonify({
 				'status': 'error',
 				'message': 'Server configuration error. Please contact support.'
 			}), 500
 
+	try:
 		# Try to connect to Google Sheets
 		creds = service_account.Credentials.from_service_account_file(
 			SERVICE_ACCOUNT_FILE,
