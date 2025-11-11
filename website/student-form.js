@@ -46,14 +46,30 @@ function sendDataToServer(data) {
     fetch(fullUrl)
         .then(response => {
             if (response.ok) {
-                return response.json();
+                // First try to get as text, then decide if it's JSON or plain text
+                return response.text();
             }
             throw new Error(`Server responded with status: ${response.status}`);
         })
-        .then(data => {
-            console.log('Success:', data);
+        .then(responseText => {
+            console.log('Raw response:', responseText);
             
-            if (data.status === 'success') {
+            let data;
+            try {
+                // Try to parse as JSON
+                data = JSON.parse(responseText);
+            } catch (jsonError) {
+                // If it's not JSON, treat plain text as success
+                if (responseText.includes('Data saved') || responseText.includes('success')) {
+                    data = { status: 'success', message: responseText };
+                } else {
+                    throw new Error(`Invalid response: ${responseText}`);
+                }
+            }
+            
+            console.log('Parsed data:', data);
+            
+            if (data.status === 'success' || responseText.includes('Data saved')) {
                 // Store data locally as backup
                 localStorage.setItem('honkingNarwhalsStudentData', JSON.stringify(data));
                 
