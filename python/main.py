@@ -6,6 +6,10 @@ from datetime import datetime
 import os
 import logging
 import warnings
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
@@ -20,9 +24,39 @@ logger = logging.getLogger(__name__)
 # Also suppress the warning at the googleapiclient level
 logging.getLogger('googleapiclient.discovery_cache').setLevel(logging.ERROR)
 
-SPREADSHEET_ID = '1yazHtr3Ye8ye489mHb-Oasbc_PI-0qp2qAvlqvnxhso'
-RANGE_NAME = 'Sheet1!A1'
-SERVICE_ACCOUNT_FILE = './google_sheet_credentials.json'
+SPREADSHEET_ID = os.getenv('SPREADSHEET_ID')
+RANGE_NAME = os.getenv('RANGE_NAME', 'Sheet1!A1')
+FLASK_ENV = os.getenv('FLASK_ENV', 'production')
+FLASK_PORT = int(os.getenv('FLASK_PORT', 5000))
+
+# Validate required environment variables
+if not SPREADSHEET_ID:
+	raise ValueError("SPREADSHEET_ID environment variable is required")
+
+required_google_env_vars = [
+	'GOOGLE_TYPE', 'GOOGLE_PROJECT_ID', 'GOOGLE_PRIVATE_KEY_ID',
+	'GOOGLE_PRIVATE_KEY', 'GOOGLE_CLIENT_EMAIL', 'GOOGLE_CLIENT_ID',
+	'GOOGLE_AUTH_URI', 'GOOGLE_TOKEN_URI'
+]
+
+for var in required_google_env_vars:
+	if not os.getenv(var):
+		raise ValueError(f"{var} environment variable is required")
+
+# Build credentials dictionary from environment variables
+GOOGLE_CREDENTIALS_DICT = {
+	'type': os.getenv('GOOGLE_TYPE'),
+	'project_id': os.getenv('GOOGLE_PROJECT_ID'),
+	'private_key_id': os.getenv('GOOGLE_PRIVATE_KEY_ID'),
+	'private_key': os.getenv('GOOGLE_PRIVATE_KEY').replace('\\n', '\n'),
+	'client_email': os.getenv('GOOGLE_CLIENT_EMAIL'),
+	'client_id': os.getenv('GOOGLE_CLIENT_ID'),
+	'auth_uri': os.getenv('GOOGLE_AUTH_URI'),
+	'token_uri': os.getenv('GOOGLE_TOKEN_URI'),
+	'auth_provider_x509_cert_url': os.getenv('GOOGLE_AUTH_PROVIDER_X509_CERT_URL', 'https://www.googleapis.com/oauth2/v1/certs'),
+	'client_x509_cert_url': os.getenv('GOOGLE_CLIENT_X509_CERT_URL', ''),
+	'universe_domain': os.getenv('GOOGLE_UNIVERSE_DOMAIN', 'googleapis.com')
+}
 
 @app.route('/')
 def index():
@@ -125,8 +159,8 @@ def submit():
 
 	try:
 		# Try to connect to Google Sheets
-		creds = service_account.Credentials.from_service_account_file(
-			SERVICE_ACCOUNT_FILE,
+		creds = service_account.Credentials.from_service_account_info(
+			GOOGLE_CREDENTIALS_DICT,
 			scopes=["https://www.googleapis.com/auth/spreadsheets"]
 		)
 		service = build('sheets', 'v4', credentials=creds)
@@ -180,3 +214,7 @@ def submit():
 				'message': 'Unable to save data. Please try again later or contact us directly.',
 				'error': str(e)
 			}), 500
+
+if __name__ == '__main__':
+	debug_mode = FLASK_ENV == 'development'
+	app.run(host='0.0.0.0', port=FLASK_PORT, debug=debug_mode)

@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function sendDataToServer(data) {
     // Build URL with query parameters
-    const baseUrl = 'https://zenmanenergy.pythonanywhere.com/submit';
+    const baseUrl = 'https://data.honkingnarwhals.com/submit';
     const params = new URLSearchParams();
     
     // Add all form fields as URL parameters
