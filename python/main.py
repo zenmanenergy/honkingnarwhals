@@ -131,32 +131,6 @@ def submit():
 	# Log the submission attempt
 	logger.info(f"Student submission: {student_first} {student_last} at {timestamp}")
 
-	# Check if credentials file exists
-	if not os.path.exists(SERVICE_ACCOUNT_FILE):
-		logger.error(f"Service account file not found: {SERVICE_ACCOUNT_FILE}")
-		# Save to backup file since Google Sheets isn't available
-		try:
-			backup_line = f"{timestamp}|{student_first}|{student_last}|{student_email}|{student_phone}|{student_age}|{student_school}|{parent1_first}|{parent1_last}|{parent1_email}|{parent1_phone}|{parent2_first}|{parent2_last}|{parent2_email}|{parent2_phone}\n"
-			
-			backup_file_path = os.path.join(os.path.dirname(__file__), 'student_submissions_backup.txt')
-			
-			with open(backup_file_path, 'a', encoding='utf-8') as f:
-				f.write(backup_line)
-				f.flush()  # Force write to disk
-			
-			logger.info(f"Saved backup data for {student_first} {student_last} (no credentials) to {backup_file_path}")
-			return jsonify({
-				'status': 'success',
-				'message': 'Data saved to backup. We will process it manually.',
-				'timestamp': timestamp
-			})
-		except Exception as backup_error:
-			logger.error(f"Backup save failed: {str(backup_error)}")
-			return jsonify({
-				'status': 'error',
-				'message': 'Server configuration error. Please contact support.'
-			}), 500
-
 	try:
 		# Try to connect to Google Sheets
 		creds = service_account.Credentials.from_service_account_info(
